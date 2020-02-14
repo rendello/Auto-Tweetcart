@@ -36,21 +36,17 @@ def authenticate(keys):
     return auth
 
 
-key_file = Path("~/.autotweetcart/keys.json").expanduser()
-keys = grab_keys(key_file)
-auth = authenticate(keys)
-api = tweepy.API(auth)
-
-user = api.me()
-#print(user)
-
-
 #override tweepy.StreamListener to add logic to on_status
 class CartStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         print(status.text)
 
+
+key_file = Path("~/.autotweetcart/keys.json").expanduser()
+keys = grab_keys(key_file)
+auth = authenticate(keys)
+api = tweepy.API(auth)
 
 stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
 stream.filter(track=['#tweetcart', '#tweetjam'])
