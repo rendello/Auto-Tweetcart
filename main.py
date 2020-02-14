@@ -6,7 +6,7 @@ import tweepy
 
 
 def grab_keys(key_file):
-    with open(key_file, 'r') as tf:
+    with open(key_file, "r") as tf:
         return json.load(tf)
 
 
@@ -15,14 +15,13 @@ def authenticate_new_user():
     """
 
     auth = tweepy.OAuthHandler(keys["consumer_key"], keys["consumer_secret"])
-    redirect_url = auth.get_authorization_url()
-    print(redirect_url)
+    print(auth.get_authorization_url())
 
-    verifier = input('Verifier: ')
+    verifier = input("Verifier: ")
 
     auth.request_token = {
-        'oauth_token': auth.request_token['oauth_token'],
-        'oauth_token_secret': verifier
+        "oauth_token": auth.request_token["oauth_token"],
+        "oauth_token_secret": verifier,
     }
 
     auth.get_access_token(verifier)
@@ -43,4 +42,15 @@ auth = authenticate(keys)
 api = tweepy.API(auth)
 
 user = api.me()
-print(user)
+#print(user)
+
+
+#override tweepy.StreamListener to add logic to on_status
+class CartStreamListener(tweepy.StreamListener):
+
+    def on_status(self, status):
+        print(status.text)
+
+
+stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
+stream.filter(track=['#tweetcart', '#tweetjam'])
