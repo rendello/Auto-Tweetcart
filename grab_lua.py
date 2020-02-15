@@ -1,8 +1,10 @@
 #!/usr/bin/python3.7
 
 import re
+from typing import List
 
-def extract_code(text: str, tokens: list) -> str:
+
+def analyze_lines(text: str, tokens: dict) -> List[dict]:
     """ Extracts code from text by comparing tokens.
 
     More specifically, it reads in text line-by-line, and gives it a score based
@@ -10,17 +12,17 @@ def extract_code(text: str, tokens: list) -> str:
     programming language, will add points. Negative tokens, such as hashtags,
     will remove points.
 
-    If the starting and / or ending lines are especially un-codelike, they will
-    be stripped.
-
     Args:
         text: The text (usually from a tweet) to be passed.
         tokens: list of dicts in the format <token>: <score>
+
+    Returns:
+        list of dicts in format <line str>: <score>
     """
 
-    line_scores = []
+    linedata = []
     for line in text.split("\n"):
-        score = 0
+        score: int = 0
 
         # If it's a comment, it can be ignored and thrown away
         if line.startswith("--") or line.startswith("//") or line.startswith("#"):
@@ -29,6 +31,7 @@ def extract_code(text: str, tokens: list) -> str:
             # Pico-8 print alias
             if line.startswith("?"):
                 score += 5
+
             splits = []
             splits.extend(re.findall(r"[\w']+", line))
             splits.extend(re.findall(r"[\W']+", line))
@@ -37,9 +40,18 @@ def extract_code(text: str, tokens: list) -> str:
                     score += tokens[word]
                 except KeyError:
                     pass
-        line_scores.append(score)
+        linedata.append({"line": line, "score": score})
 
-    return line_scores
+    return linedata
+
+
+def strip_non_code(linedata: List[dict], tolerence: int = 0) -> str:
+    text = ""
+    for ld in linedata:
+        if ld["score"] > tolerence:
+            text += f"{ld['line']}\n"
+
+    return text
 
 
 probably_not_lua = [
@@ -194,7 +206,7 @@ tokens.update({token: 1 for token in maybe_lua})
 tokens.update({token: 3 for token in likely_lua})
 tokens.update({token: 5 for token in almost_certainly_lua})
 
-e ="""
+e = """
 t=0::f::s=sin(t)
 memcpy(24456+s*2,
 24316+s*4+t*2,8192)
@@ -206,4 +218,6 @@ Loses information over time
 
 #pico8
 """
-print(extract_code(e, tokens))
+o = analyze_lines(e, tokens)
+print(strip_non_code(o))
+
