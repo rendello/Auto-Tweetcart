@@ -36,9 +36,8 @@ def authenticate(keys):
     return auth
 
 
-#override tweepy.StreamListener to add logic to on_status
+# override tweepy.StreamListener to add logic to on_status
 class CartStreamListener(tweepy.StreamListener):
-
     def on_status(self, status):
         print(status.text)
 
@@ -49,4 +48,4 @@ auth = authenticate(keys)
 api = tweepy.API(auth)
 
 stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
-stream.filter(track=['#tweetcart', '#tweetjam'])
+stream.filter(track=["#tweetcart", "#tweetjam"])

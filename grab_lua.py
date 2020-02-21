@@ -220,4 +220,3 @@ Loses information over time
 """
 o = analyze_lines(e, tokens)
 print(strip_non_code(o))
-
