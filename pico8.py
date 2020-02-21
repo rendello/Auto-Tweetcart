@@ -6,26 +6,33 @@ For use only in a secure, containerized environment!
 """
 
 import subprocess
+import os
 import pyperclip
 from time import sleep
 
-def run_pico8_code(code: str, window: str) -> bool:
+
+def start_pico8() -> None:
+    pass
+
+
+def run_pico8_code(code: str, window: str, display: str) -> None:
     pyperclip.copy(code)
+    os.system(f"xclip -selection clipboard -d $DISPLAY -o | xclip -selection clipboard -d :{display} -i")
 
     instructions = [
-        f"xdotool key --window {window} Escape",
-        f"xdotool key --window {window} ctrl+v",
-        f"xdotool key --window {window} Escape",
-        f"xdotool type --window {window} run",
-        f"xdotool key --window {window} Return",
-        f"xdotool key --window {window} F8",
+        f"DISPLAY=:{display} xdotool key --window {window} Escape",
+        f"DISPLAY=:{display} xdotool key --window {window} ctrl+v",
+        f"DISPLAY=:{display} xdotool key --window {window} Escape",
+        f"DISPLAY=:{display} xdotool type --window {window} run",
+        f"DISPLAY=:{display} xdotool key --window {window} Return",
+        f"DISPLAY=:{display} xdotool key --window {window} F8",
     ]
 
     for i in instructions:
         print(i)
-        subprocess.run(i.split())
-    sleep(3)
-    subprocess.run(f"xdotool key --window {window} F9".split())
+        os.system(i)
+    sleep(30)
+    os.system(f"DISPLAY=:{display} xdotool key --window {window} F9")
 
 
 e = """
