@@ -5,18 +5,36 @@
 For use only in a secure, containerized environment!
 """
 
-import subprocess
 import os
+import subprocess
 import pyperclip
 from time import sleep
 
 
-def start_pico8() -> None:
-    pass
+def get_pico8_window(display: str) -> str:
+    try:
+        window_cmd = subprocess.run(f"DISPLAY=:{display} xwininfo -root -tree | grep PICO-8", shell=True, capture_output=True, check=True)
+        window = window_cmd.stdout.decode("utf-8").split()[0]
+    except subprocess.CalledProcessError:
+        window = str()
+
+    return window
+
+
+def start_pico8(display: str) -> str:
+    os.system(f"DISPLAY=:{display} pico8 -desktop ~/Desktop/Test -gif_scale 4 &")
+    sleep(6)
+    return get_pico8_window(display)
+
+
+def kill_pico8():
+    os.system("killall pico8")
 
 
 def run_pico8_code(code: str, window: str, display: str) -> None:
     pyperclip.copy(code)
+
+    # Copy clipboard to other display's clipboard
     os.system(f"xclip -selection clipboard -d $DISPLAY -o | xclip -selection clipboard -d :{display} -i")
 
     instructions = [
@@ -35,29 +53,11 @@ def run_pico8_code(code: str, window: str, display: str) -> None:
     os.system(f"DISPLAY=:{display} xdotool key --window {window} F9")
 
 
-e = """
-cls(1)c,s,b,g,d=circfill,64,37,24576,104::_::for i=1,128 do
-x,y=rnd(128),rnd(90)
-if(pget(x,y)==8)pset(x,y+rnd(3),8)pset(x,y-1,1)end
-c(s,b,32,8)c(d,d,b,0)c(s,d,20,0)memset(g+91*s,0,b*s)
-?"웃웃",97,62,0
-?"웃",61,47,0
-for i=0,b,2 do 
-memcpy(g+(i+90)*s,g+(90-i*2)*s,s)end
-flip()goto _
-"""
+if __name__ == "__main__":
+    kill_pico8()
 
-e = """
-z=128w=64g,h=line,circfill::_::cls()
-if(t()%8<rnd(.3))cls(7)
-for n=66,84,8 do
-s={}for x=-1,z do
-i=rnd(z)g(x,i,x+5,i-9,1)a=12l=.0002y=n
-for n=1,4 do 
-y+=sin(x*l+t()*n*.1)*a
-l*=3a/=.9end
-g(x,m,x,z)s[x+1]=y+6m=y end
-if n==66 then
-k=s[61]h(w,k,4,14)h(66,k-2,.5,7)
-end end flip()goto _
-"""
+    display = "10"
+    code = "::_:: print('test', flr(rnd(150))-30,flr(rnd(140-10)),ceil(rnd(15))) flip() goto _"
+    window = start_pico8(display)
+
+    run_pico8_code(code, window, display)
