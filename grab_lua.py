@@ -54,6 +54,16 @@ def strip_non_code(linedata: List[dict], tolerence: int = 0) -> str:
     return text
 
 
+def seek_restricted_tokens(code):
+    restricted_tokens = [
+        "cstore",
+        "reload",
+        "printh",
+    ]
+    if any(rt in code for rt in restricted_tokens):
+        return no_io_code
+
+
 probably_not_lua = [
     "tweetcart",
     "tweetjam",

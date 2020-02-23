@@ -3,6 +3,7 @@
 from pathlib import Path
 import json
 import tweepy
+import pico8
 
 
 def grab_keys(key_file):
@@ -40,6 +41,14 @@ def authenticate(keys):
 class CartStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         print(status.text)
+        print(dir(status))
+        api.update_status(
+            "ack", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True
+        )
+
+    def on_error(self, status_code):
+        if status_code == 420:  # Too many attempts to connect to API
+            return True  # Reconnect w/ backoff
 
 
 key_file = Path("~/.autotweetcart/keys.json").expanduser()
@@ -48,4 +57,12 @@ auth = authenticate(keys)
 api = tweepy.API(auth)
 
 stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
-stream.filter(track=["#tweetcart", "#tweetjam"])
+stream.filter(
+    track=[
+        "@auto_tweetcart",
+        "#autotc",
+        "#auto_tc",
+        "#autotweetcart",
+        "#auto_tweetcart",
+    ]
+)
