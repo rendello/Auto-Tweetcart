@@ -1,2 +1,2 @@
 
-![Auto Tweetcart Cover](artwork/cover.png "Auto Tweetcart Cover")
+![Auto Tweetcart Cover](artwork/cover-gitlab.png "Auto Tweetcart Cover")
