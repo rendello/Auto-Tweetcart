@@ -3,7 +3,7 @@
 # Delete previous GIF
 rm ~/atc/GIF/*
 
-# Start virtual display
+# Start virtual display (if not already started)
 Xvfb :10 -ac -screen 0 1024x768x24 
 
 # Start PICO-8 (and wait for intro)
