@@ -32,3 +32,6 @@ DISPLAY=:10 xdotool key --window $window F9
 sleep 10
 killall pico8
 rm ~/atc/code
+
+# Optimize GIF (it's huge so it might not fit under limit)
+gifsicle ~/atc/GIF/PICO-8_0.gif --optimize=3 --output ~/atc/GIF/PICO-opti.gif
