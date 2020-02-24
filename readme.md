@@ -6,6 +6,8 @@
 [PICO-8](https://www.lexaloffle.com/pico-8.php) code and responds with a video
 of the results!
 
+Inspired by the lovely [@bbcmicrobot](https://twitter.com/bbcmicrobot).
+
 # Development
 ## Contributing
 Thanks for wanting to contribute! Keep in mind that this bot is built
@@ -23,4 +25,5 @@ This project uses:
 - Separate Twitter code from back end,
 - Create Discord bot with same back end,
 - Add multiple tweet per cart support, for things like [#TweetTweetJam](https://twitter.com/hashtag/TweetTweetJam),
+- Check tweet against AST to see if it's code, or which parts are code,
 - Add DM support.
