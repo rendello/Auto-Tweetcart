@@ -21,8 +21,6 @@ def authenticate(keys):
 # override tweepy.StreamListener to add logic to on_status
 class CartStreamListener(tweepy.StreamListener):
     def on_status(self, status):
-        print(status.text)
-        print(dir(status))
         api.update_status(
             "ack", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True
         )

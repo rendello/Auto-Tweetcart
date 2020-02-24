@@ -19,9 +19,7 @@ cat ~/atc/code | xclip -selection clipboard -d :10 -i
 # Paste, run, and start recording in PICO-8
 DISPLAY=:10 xdotool key --window $window Escape
 DISPLAY=:10 xdotool key --window $window ctrl+v
-DISPLAY=:10 xdotool key --window $window Escape
-DISPLAY=:10 xdotool type --window $window run
-DISPLAY=:10 xdotool key --window $window Return
+DISPLAY=:10 xdotool key --window $window ctrl+r
 DISPLAY=:10 xdotool key --window $window F8
 
 # Stop recording after 30 seconds
@@ -33,5 +31,5 @@ sleep 10
 killall pico8
 rm ~/atc/code
 
-# Optimize GIF (it's huge so it might not fit under limit)
+# Optimize GIF (it's huge so it might not fit under limit otherwise)
 gifsicle ~/atc/GIF/PICO-8_0.gif --optimize=3 --output ~/atc/GIF/PICO-opti.gif
