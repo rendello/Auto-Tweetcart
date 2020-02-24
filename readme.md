@@ -25,5 +25,5 @@ This project uses:
 - Separate Twitter code from back end,
 - Create Discord bot with same back end,
 - Add multiple tweet per cart support, for things like [#TweetTweetJam](https://twitter.com/hashtag/TweetTweetJam),
-- Check tweet against AST to see if it's code, or which parts are code,
+- Add checks against tweets to see what parts, if any, contain code,
 - Add DM support.
