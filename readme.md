@@ -17,3 +17,9 @@ This project uses:
 - [Vincent Driessen's branching model](https://nvie.com/posts/a-successful-git-branching-model/),
 - [PEP-8 style guide](https://www.python.org/dev/peps/pep-0008/) + [Black formatter](https://github.com/psf/black),
 - [Google-style docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html), when needed.
+
+## Roadmap
+- Separate Twitter code from back end,
+- Create Discord bot with same back end,
+- Add multiple tweet per cart support, for things like [#TweetTweetJam](https://twitter.com/hashtag/tweetweetjam),
+- Add DM support.
