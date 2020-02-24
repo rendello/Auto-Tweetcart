@@ -1,21 +1,16 @@
 
 ![Auto Tweetcart Cover](artwork/cover-gitlab.png "Auto Tweetcart Cover")
 
-# Synonpsis
-Auto Tweetcart is a Twitter bot that runs
-[PICO-8](https://www.lexaloffle.com/pico-8.php) code when called with its name
-[@auto_tweetcart](https://twitter.com/auto_tweetcart). It then responds with a
-video of the results!
-
-## Installing
-Auto Tweetcart is always running, and shouldn't need to be installed.
+# Synopsis
+[@auto_tweetcart](https://twitter.com/auto_tweetcart) is Twitter bot that runs
+[PICO-8](https://www.lexaloffle.com/pico-8.php) code and responds with a video
+of the results!
 
 # Contributing
 Thanks for wanting to contribute! Keep in mind that this bot is built
 specifically for LXC on Ubuntu.
 
-## Pull Requests
-Please get in contact before putting in a PR.
+Please get in touch before putting in a PR.
 
 This project uses:
 - [Semantic versioning](https://semver.org),
