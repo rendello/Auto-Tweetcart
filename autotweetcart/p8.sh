@@ -7,7 +7,7 @@ rm ~/atc/GIF/*
 Xvfb :10 -ac -screen 0 1024x768x24 
 
 # Start PICO-8 (and wait for intro)
-DISPLAY=:10 pico8 -desktop ~/atc/GIF -gif_scale 4 &
+DISPLAY=:10 ~/pico8 -desktop ~/atc/GIF -gif_scale 4 -gif_len 120 &
 sleep 6
 
 # Get PICO-8 window ID

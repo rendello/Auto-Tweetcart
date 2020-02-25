@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import tweepy
 import pico8
+import html
 
 
 def grab_keys(key_file):
@@ -21,8 +22,26 @@ def authenticate(keys):
 # override tweepy.StreamListener to add logic to on_status
 class CartStreamListener(tweepy.StreamListener):
     def on_status(self, status):
+        print(dir(status))
+
+        if hasattr(status, "retweeted_status"):  # Check if Retweet
+            try:
+                text = status.retweeted_status.extended_tweet["full_text"]
+            except AttributeError:
+                text = status.retweeted_status.text
+        else:
+            try:
+                text = status.extended_tweet["full_text"]
+            except AttributeError:
+                text = status.text
+        text = html.unescape(text)
+
+        pico8.process_code(text)
+
+        gif_id = api.media_upload("GIF/PICO-opti.gif").media_id
+
         api.update_status(
-            "ack", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True
+            "ack", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True, media_ids=[gif_id]
         )
 
     def on_error(self, status_code):
@@ -39,9 +58,5 @@ stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
 stream.filter(
     track=[
         "@auto_tweetcart",
-        "#autotc",
-        "#auto_tc",
-        "#autotweetcart",
-        "#auto_tweetcart",
     ]
 )

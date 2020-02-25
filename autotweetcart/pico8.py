@@ -1,11 +1,14 @@
 #!/usr/bin/python3.7
 
-""" Runs horribly insecure code through subprocess.
-
-For use only in a secure, containerized environment!
-"""
-
 import subprocess
+
+
+def remove_bot_call(text):
+    new_text = ""
+    for line in text.split("\n"):
+        if "@auto_tweetcart" not in line:
+            new_text += f"{line}\n"
+    return new_text
 
 
 def has_bad_words(text, profanity_file_path) -> bool:
@@ -51,3 +54,15 @@ def intercept_restricted_tokens(text) -> str:
         if token in text:
             return no_io
     return text
+
+
+def process_code(text):
+    if has_bad_words(text, "profanity.txt"):
+        return False
+
+    text = remove_bot_call(text)
+    text = intercept_restricted_tokens(text)
+    with open("code_file", "w") as f:
+        f.write(text)
+    
+    subprocess.run("./run.sh")
