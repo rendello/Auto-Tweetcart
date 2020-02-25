@@ -9,11 +9,12 @@ of the results!
 Inspired by the lovely [@bbcmicrobot](https://twitter.com/bbcmicrobot).
 
 # Development
-## Contributing
-Thanks for wanting to contribute! Keep in mind that this bot is built
-specifically for LXC on Ubuntu.
+Development is done by [@rendello\_](https://twitter.com/rendello_), but help
+and forking is accepted! Build intructions are specific, [see the readme in the
+source directory](autotweetcart/readme.md).
 
-Please get in touch before putting in a PR.
+## Contributing
+Please get in touch before putting in a PR or stress-testing the bot.
 
 This project uses:
 - [Semantic versioning](https://semver.org),
@@ -24,6 +25,7 @@ This project uses:
 ## Roadmap
 - Separate Twitter code from back end,
 - Create Discord bot with same back end,
-- Add multiple tweet per cart support, for things like [#TweetTweetJam](https://twitter.com/hashtag/TweetTweetJam),
+- Allow for calling bot from further child tweet of code,
+- Add multiple-tweet-per-cart support, for things like [#TweetTweetJam](https://twitter.com/hashtag/TweetTweetJam),
 - Add checks against tweets to see what parts, if any, contain code,
 - Add DM support.
