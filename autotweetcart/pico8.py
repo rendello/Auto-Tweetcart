@@ -66,3 +66,4 @@ def process_code(text):
         f.write(text)
     
     subprocess.run("./run.sh")
+    return True

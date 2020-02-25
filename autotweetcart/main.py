@@ -22,7 +22,6 @@ def authenticate(keys):
 # override tweepy.StreamListener to add logic to on_status
 class CartStreamListener(tweepy.StreamListener):
     def on_status(self, status):
-        print(dir(status))
 
         if hasattr(status, "retweeted_status"):  # Check if Retweet
             try:
@@ -36,13 +35,17 @@ class CartStreamListener(tweepy.StreamListener):
                 text = status.text
         text = html.unescape(text)
 
-        pico8.process_code(text)
+        if (status.author.screen_name == "auto_tweetcart") and ("TEST" not in text):
+            # Prevent infinite looping by bot
+            return
 
-        gif_id = api.media_upload("GIF/PICO-opti.gif").media_id
+        # Returns False if encounters curses
+        if pico8.process_code(text):
+            gif_id = api.media_upload("GIF/PICO-opti.gif").media_id
 
-        api.update_status(
-            f"#AutoTweetCart by @{status.author.screen_name}", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True, media_ids=[gif_id]
-        )
+            api.update_status(
+                f"#AutoTweetCart by @{status.author.screen_name}", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True, media_ids=[gif_id]
+            )
 
     def on_error(self, status_code):
         if status_code == 420:  # Too many attempts to connect to API
