@@ -8,7 +8,15 @@ For use only in a secure, containerized environment!
 import subprocess
 
 
-def intercept_restricted_tokens(text):
+def has_bad_words(text, profanity_file_path) -> bool:
+    with open(profanity_file_path, "r") as f:
+        for line in f.readlines():
+            if line.strip("\n") in text:
+                return True
+    return False
+
+
+def intercept_restricted_tokens(text) -> str:
     no_io = """
     function middle_print(text, y)
         print(text, 64-((4*#text)/2), y, 7)
@@ -38,14 +46,8 @@ def intercept_restricted_tokens(text):
         middle_print("file i/o not allowed", 55)
     end
     """
-    restricted_tokens = [
-        "cstore",
-        "reload",
-        "printh"
-    ]
+    restricted_tokens = ["cstore", "reload", "printh"]
     for token in restricted_tokens:
         if token in text:
             return no_io
     return text
-
-
