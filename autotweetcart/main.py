@@ -41,7 +41,7 @@ class CartStreamListener(tweepy.StreamListener):
         gif_id = api.media_upload("GIF/PICO-opti.gif").media_id
 
         api.update_status(
-            "ack", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True, media_ids=[gif_id]
+            f"#AutoTweetCart by @{status.author.screen_name}", in_reply_to_status_id=status.id, auto_populate_reply_metadata=True, media_ids=[gif_id]
         )
 
     def on_error(self, status_code):
