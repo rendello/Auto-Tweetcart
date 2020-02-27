@@ -31,5 +31,25 @@ sleep 10
 killall pico8
 rm ~/atc/code
 
+gif_path=~/atc/GIF/PICO-opti.gif
+
 # Optimize GIF (it's huge so it might not fit under limit otherwise)
-gifsicle ~/atc/GIF/PICO-8_0.gif --optimize=3 --output ~/atc/GIF/PICO-opti.gif
+gifsicle ~/atc/GIF/PICO-8_0.gif --optimize=3 --output $gif_path
+
+# If GIF is still too big, cut its frame number down until it's not
+size=$(du -b $gif_path | cut -d$'\t' -f1)
+while (( $size > 15000000 )); do
+	echo $framecount $size
+	framecount=$(exiftool -b -FrameCount $gif_path)
+
+	if (( framecount > 200 )); then
+		sub_no=$((100))
+	elif (( framecount > 10 )); then
+		sub_no=$((10))
+	else
+		sub_no=$((1))
+	fi
+
+	gifsicle $gif_path '#0-'$(($framecount-$sub_no))'' -o $gif_path
+	size=$(du -b $gif_path | cut -d$'\t' -f1)
+done
