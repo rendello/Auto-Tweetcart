@@ -1,12 +1,14 @@
 #!/usr/bin/python3.7
 
 import subprocess
+import base64
 
 
 def has_bad_words(text, profanity_file_path) -> bool:
     with open(profanity_file_path, "r") as f:
-        for line in f.readlines():
-            if line.strip("\n") in text:
+        curses = base64.b64decode(f.read()).decode("utf-8")
+        for curse in curses.split("\n"):
+            if curse in text:
                 return True
     return False
 
