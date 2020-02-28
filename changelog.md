@@ -6,6 +6,11 @@ Format, based on [this](https://keepachangelog.com/en/1.0.0/):
 [ Added | Changed | Deprecated | Removed | Fixed | Security ]
 
 ## [Unreleased]
+
+
+## [1.2.0] - 2020-02-28
+### Added
+- New readme in source dir for installing bot on system
 ### Changed
 - Will do simple checks so it doesn't respond to non-code
 ### Fixed
