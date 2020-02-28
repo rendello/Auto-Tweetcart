@@ -6,6 +6,10 @@ Format, based on [this](https://keepachangelog.com/en/1.0.0/):
 [ Added | Changed | Deprecated | Removed | Fixed | Security ]
 
 ## [Unreleased]
+### Changed
+- Will do simple checks so it doesn't respond to non-code
+### Fixed
+- Kills PICO-8 before running in case of improper shutdown
 
 ## [1.1.0] - 2020-02-27
 ### Added

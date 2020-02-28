@@ -5,6 +5,11 @@ import base64
 
 
 def has_bad_words(text, profanity_file_path) -> bool:
+    """ Returns True if there are bad words.
+
+    Bad words are base64 encoded as I don't want to host every swear, slur and
+    rude phrase in cleartext on my Gitlab.
+    """
     with open(profanity_file_path, "r") as f:
         curses = base64.b64decode(f.read()).decode("utf-8")
         for curse in curses.split("\n"):
@@ -50,8 +55,11 @@ def intercept_restricted_tokens(text) -> str:
     return text
 
 
-def process_code(text):
+def process_code(text) -> bool:
     if has_bad_words(text, "profanity.txt"):
+        return False
+
+    if not is_lua(text):
         return False
 
     text = intercept_restricted_tokens(text)
@@ -60,3 +68,160 @@ def process_code(text):
 
     subprocess.run("./run.sh")
     return True
+
+
+def is_lua(text) -> bool:
+
+    maybe_lua = [
+        "if",
+        "while",
+        "do",
+        "then",
+        "and",
+        "not",
+        "for",
+        "end",
+        "in",
+        "or",
+        "else",
+        "until",
+        "time",
+        "type",
+        ";",
+        "sin",
+        "trace",
+        "add",
+        "all",
+        "&",
+        "+",
+        "music",
+        "map",
+        "camera",
+        "(",
+        ")",
+    ]
+
+    likely_lua = [
+        "repeat",
+        "local",
+        "function",
+        "break",
+        "return",
+        "false",
+        "true",
+        "function",
+        "clip",
+        "sfx",
+        "print",
+        "nil",
+        "elseif",
+        "goto",
+        "::",
+        "circ",
+        "circfill",
+        "cls",
+        "color",
+        "cursor",
+        "fget",
+        "fillp",
+        "fset",
+        "line",
+        "pal",
+        "palt",
+        "pget",
+        "pset",
+        "rect",
+        "rectfill",
+        "sget",
+        "spr",
+        "sset",
+        "sspr",
+        "flip",
+        "_init",
+        "_update",
+        "_draw",
+        "del",
+        "foreach",
+        "pairs",
+        "btn",
+        "btnp",
+        "mget",
+        "mset",
+        "cstore",
+        "memcpy",
+        "memset",
+        "peek",
+        "poke",
+        "reload",
+        "abs",
+        "atan2",
+        "band",
+        "bnot",
+        "bor",
+        "bxor",
+        "cos",
+        "flr",
+        "max",
+        "mid",
+        "min",
+        "rnd",
+        "shl",
+        "shr",
+        "sqrt",
+        "srand",
+        "cartdata",
+        "dget",
+        "dset",
+        "cocreate",
+        "coresume",
+        "costatus",
+        "yield",
+        "setmetatable",
+        "getmetatable",
+        "sub",
+        "tonum",
+        "tostr",
+        "menuitem",
+        "extcmd",
+        "assert",
+        "printh",
+        "stat",
+        "stop",
+        "=",
+        "{",
+        "}",
+        "=",
+        "~=",
+        "==",
+        "<=",
+        ">=",
+        "<",
+        ">",
+        "|",
+        "~",
+        "<<",
+        ">>",
+        "..",
+        "*",
+        "/",
+        "%",
+        "~",
+        "^",
+        "--",
+    ]
+
+    score = 0
+    threshold = 4
+    for token in maybe_lua:
+        if token in text:
+            score += 1
+
+    for token in likely_lua:
+        if token in text:
+            score += 3
+
+    if score > threshold:
+        return True
+    return False
+
+
