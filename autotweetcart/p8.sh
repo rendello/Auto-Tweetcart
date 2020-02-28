@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Important if PICO8 wasn't closed correctly
+killall --quiet pico8
+
 # Delete previous GIF
 rm ~/atc/GIF/*
 
