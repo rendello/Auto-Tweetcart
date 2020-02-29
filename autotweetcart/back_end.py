@@ -223,5 +223,3 @@ def is_lua(text) -> bool:
     if score > threshold:
         return True
     return False
-
-
