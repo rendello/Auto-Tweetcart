@@ -89,7 +89,7 @@ def grab_title(text):
     for line in text.split("\n"):
         for comment_denoter in ("--", "//"):
             if line.startswith(comment_denoter):
-                potential = line.replace("--", "").strip()
+                potential = line.replace(comment_denoter, "").strip()
                 if potential != "":
                     return potential
     return None
