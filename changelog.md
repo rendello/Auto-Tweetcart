@@ -6,8 +6,12 @@ Format, based on [this](https://keepachangelog.com/en/1.0.0/):
 [ Added | Changed | Deprecated | Removed | Fixed | Security ]
 
 ## [Unreleased]
+### Added
+- Title extraction from comments in tweetcarts
 
-
+## [1.2.1] - 2020-02-29
+### Added
+- Error handling for stream
 ## [1.2.0] - 2020-02-28
 ### Added
 - New readme in source dir for installing bot on system
