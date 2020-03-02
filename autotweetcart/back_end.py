@@ -13,7 +13,7 @@ def has_bad_words(text, profanity_file_path) -> bool:
     with open(profanity_file_path, "r") as f:
         curses = base64.b64decode(f.read()).decode("utf-8")
         for curse in curses.split("\n"):
-            if curse in text:
+            if curse in text.lower():
                 return True
     return False
 
@@ -55,19 +55,44 @@ def intercept_restricted_tokens(text) -> str:
     return text
 
 
-def process_code(text) -> bool:
+def process_code(text: str) -> dict:
+    """ Processes & runs PICO-8 code.
+
+    Args:
+        text: The extracted text from the Tweet, call to bot removed.
+
+    Returns:
+        (dict):
+            was_successful: If code was run.
+            title: The title of the Tweetcart as extracted from the code.
+    """
+    failure = {"was_successful": False, "title": None}
+
     if has_bad_words(text, "profanity.txt"):
-        return False
+        return failure
 
     if not is_lua(text):
-        return False
+        return failure
 
     text = intercept_restricted_tokens(text)
+
+    title = grab_title(text)
+
     with open("code_file", "w") as f:
         f.write(text)
 
     subprocess.run("./run.sh")
-    return True
+    return {"was_successful": True, "title": title}
+
+
+def grab_title(text):
+    for line in text.split("\n"):
+        for comment_denoter in ("--", "//"):
+            if line.startswith(comment_denoter):
+                potential = line.replace("--", "").strip()
+                if potential != "":
+                    return potential
+    return None
 
 
 def is_lua(text) -> bool:

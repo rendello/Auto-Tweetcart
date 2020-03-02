@@ -64,24 +64,32 @@ class CartStreamListener(tweepy.StreamListener):
             ):
                 return
 
-            # Returns False if encounters profanity
-            if back_end.process_code(text):
+            process_info = back_end.process_code(text)
+
+            if process_info["was_successful"]:
                 gif_id = api.media_upload("GIF/PICO-opti.gif").media_id
 
+                if process_info["title"] == None:
+                    tweet_text = f"#AutoTweetCart by @{status.author.screen_name}"
+                else:
+                    tweet_text = f"“{process_info['title']}” by @{status.author.screen_name}\n#AutoTweetCart"
+
                 api.update_status(
-                    f"#AutoTweetCart by @{status.author.screen_name}",
+                    tweet_text,
                     in_reply_to_status_id=status.id,
                     auto_populate_reply_metadata=True,
                     media_ids=[gif_id],
                 )
         except tweepy.TweepError as error:
-            if error.api_code in acceptable_errors:
-                print(f"{error.api_code}: {error.reason}")
+            print(f"{error.api_code}: {error.reason}")
+            if error.api_code not in acceptable_errors:
+                return
 
     def on_error(self, status_code):
         # True reconnects with a backoff, False ends the stream
 
         if status_code == 420:  # Too many attempts to connect to API
+            print("Error 420: being rate-limited.")
             return True
 
 
