@@ -6,6 +6,12 @@ Format, based on [this](https://keepachangelog.com/en/1.0.0/):
 [ Added | Changed | Deprecated | Removed | Fixed | Security ]
 
 ## [Unreleased]
+
+## [1.3.1] - 2020-03-02
+### Fixed
+- Title extraction with double slash now works correctly
+
+## [1.3.0] - 2020-03-01
 ### Added
 - Title extraction from comments in tweetcarts
 
