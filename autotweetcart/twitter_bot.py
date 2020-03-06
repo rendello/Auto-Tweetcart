@@ -1,6 +1,7 @@
 #!/usr/bin/python3.7
 
 from pathlib import Path
+from urllib3.exceptions import ProtocolError
 import json
 import tweepy
 import html
@@ -41,19 +42,14 @@ class CartStreamListener(tweepy.StreamListener):
             407,  # Invalid URL in Tweet
         ]
         try:
-
-            # --> Get text, regardless if retweet or not
-            if hasattr(status, "retweeted_status"):
-                try:
-                    text = status.retweeted_status.extended_tweet["full_text"]
-                except AttributeError:
-                    text = status.retweeted_status.text
-            else:
+            # Grab 280 char "full" text, if it exists
+            if not hasattr(status, "retweeted_status"):
                 try:
                     text = status.extended_tweet["full_text"]
                 except AttributeError:
                     text = status.text
-            # <--
+            else:
+                return
 
             text = html.unescape(text)
             text = remove_bot_call(text, bot_username)
