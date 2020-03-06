@@ -1,0 +1,30 @@
+[Unreleased]
+====================
+- Adds logging
+- Retweeted code no longer re-processes it
+
+[1.3.1] - 2020-03-02
+====================
+- Fixes title extraction with double slashes
+
+[1.3.0] - 2020-03-01
+====================
+- Adds title extraction from comments in tweetcarts
+
+[1.2.1] - 2020-02-29
+====================
+- Adds error handling for stream
+
+[1.2.0] - 2020-02-28
+====================
+- Adds readme in source dir for installing bot on system
+- Now performs simple checks so it doesn't respond to non-code
+- Now kills PICO-8 before running in case of improper shutdown
+
+[1.1.0] - 2020-02-27
+====================
+- Adds support for large GIFs by trimming length
+
+[1.0.0] - 2020-02-26
+====================
+[Initial release]
