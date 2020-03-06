@@ -5,8 +5,10 @@ from urllib3.exceptions import ProtocolError
 import json
 import tweepy
 import html
+import sys
 
 import back_end
+from simple_logging import log
 
 
 def authenticate(keys):
@@ -14,7 +16,6 @@ def authenticate(keys):
     auth.set_access_token(keys["access_token"], keys["access_secret"])
 
     return auth
-
 
 def remove_bot_call(text, bot_username):
     new_text = ""
@@ -42,42 +43,53 @@ class CartStreamListener(tweepy.StreamListener):
             407,  # Invalid URL in Tweet
         ]
         try:
-            # Grab 280 char "full" text, if it exists
+            # ===== Grab tweet text; ignore retweets
             if not hasattr(status, "retweeted_status"):
                 try:
                     text = status.extended_tweet["full_text"]
                 except AttributeError:
                     text = status.text
             else:
+                log("Ignoring Retweet.")
                 return
+
+            log(f"Status found: <{status.id}> {text}")
 
             text = html.unescape(text)
             text = remove_bot_call(text, bot_username)
 
-            # Prevent infinite looping by bot
+            # ===== Ignore bot's own Tweets
             if (f"@{status.author.screen_name}" == bot_username) and (
                 "TEST" not in text
             ):
+                log("Ignoring own Tweet.")
                 return
 
+            # ===== Pass text off to back end
+            log("Processing Tweet.")
             process_info = back_end.process_code(text)
 
             if process_info["was_successful"]:
                 gif_id = api.media_upload("GIF/PICO-opti.gif").media_id
 
+                # ===== Upload result GIF
                 if process_info["title"] == None:
                     tweet_text = f"#AutoTweetCart by @{status.author.screen_name}"
                 else:
                     tweet_text = f"“{process_info['title']}” by @{status.author.screen_name}\n#AutoTweetCart"
 
-                api.update_status(
+                reply_status = api.update_status(
                     tweet_text,
                     in_reply_to_status_id=status.id,
                     auto_populate_reply_metadata=True,
                     media_ids=[gif_id],
                 )
+                log(f"Posted tweet: <{reply_status.id}> {tweet_text}")
+            else:
+                log("Processing failed.")
+
         except tweepy.TweepError as error:
-            print(f"{error.api_code}: {error.reason}")
+            log(f"{error.api_code}: {error.reason}")
             if error.api_code not in acceptable_errors:
                 return
 
@@ -85,18 +97,25 @@ class CartStreamListener(tweepy.StreamListener):
         # True reconnects with a backoff, False ends the stream
 
         if status_code == 420:  # Too many attempts to connect to API
-            print("Error 420: being rate-limited.")
+            log("Error 420: being rate-limited.")
             return True
 
 
-key_file = Path("~/.autotweetcart/keys.json").expanduser()
-with open(key_file, "r") as f:
-    keys = json.load(f)
+if __name__ == "__main__":
+    key_file = Path("~/.autotweetcart/keys.json").expanduser()
 
-auth = authenticate(keys)
-api = tweepy.API(auth)
-bot_username = f"@{api.me().screen_name}"
+    with open(key_file, "r") as f:
+        keys = json.load(f)
 
+    auth = authenticate(keys)
+    api = tweepy.API(auth)
+    bot_username = f"@{api.me().screen_name}"
 
-stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
-stream.filter(track=[bot_username])
+    stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
+
+    try:
+        log("===== Starting =====")
+        stream.filter(track=[bot_username])
+    except KeyboardInterrupt as e:
+        log("Keyboard interrupt. Closing.")
+        sys.exit(0)

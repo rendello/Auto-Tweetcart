@@ -3,6 +3,8 @@
 import subprocess
 import base64
 
+from simple_logging import log
+
 
 def has_bad_words(text, profanity_file_path) -> bool:
     """ Returns True if there are bad words.
@@ -53,36 +55,6 @@ def intercept_restricted_tokens(text) -> str:
         if token in text:
             return no_io
     return text
-
-
-def process_code(text: str) -> dict:
-    """ Processes & runs PICO-8 code.
-
-    Args:
-        text: The extracted text from the Tweet, call to bot removed.
-
-    Returns:
-        (dict):
-            was_successful: If code was run.
-            title: The title of the Tweetcart as extracted from the code.
-    """
-    failure = {"was_successful": False, "title": None}
-
-    if has_bad_words(text, "profanity.txt"):
-        return failure
-
-    if not is_lua(text):
-        return failure
-
-    text = intercept_restricted_tokens(text)
-
-    title = grab_title(text)
-
-    with open("code_file", "w") as f:
-        f.write(text)
-
-    subprocess.run("./run.sh")
-    return {"was_successful": True, "title": title}
 
 
 def grab_title(text):
@@ -248,3 +220,36 @@ def is_lua(text) -> bool:
     if score > threshold:
         return True
     return False
+
+
+def process_code(text: str) -> dict:
+    """ Processes & runs PICO-8 code.
+
+    Args:
+        text: The extracted text from the Tweet, call to bot removed.
+
+    Returns:
+        (dict):
+            was_successful: If code was run.
+            title: The title of the Tweetcart as extracted from the code.
+    """
+    failure = {"was_successful": False, "title": None}
+
+    if has_bad_words(text, "profanity.txt"):
+        log("Failed: Tweet contains profanity.")
+        return failure
+
+    if not is_lua(text):
+        log("Failed: Tweet not Lua.")
+        return failure
+
+    text = intercept_restricted_tokens(text)
+
+    title = grab_title(text)
+
+    with open("code_file", "w") as f:
+        f.write(text)
+
+    subprocess.run("./run.sh")
+    return {"was_successful": True, "title": title}
+
