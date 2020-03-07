@@ -17,6 +17,7 @@ def authenticate(keys):
 
     return auth
 
+
 def remove_bot_call(text, bot_username):
     new_text = ""
     for line in text.split("\n"):

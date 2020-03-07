@@ -252,4 +252,3 @@ def process_code(text: str) -> dict:
 
     subprocess.run("./run.sh")
     return {"was_successful": True, "title": title}
-

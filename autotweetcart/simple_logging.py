@@ -3,10 +3,11 @@
 from pathlib import Path
 from time import localtime, strftime
 
+
 def log(message, restrict=True):
     if restrict:
         # Truncate message.
-        message = (message[:75] + '…') if len(message) > 75 else message
+        message = (message[:75] + "…") if len(message) > 75 else message
         message = message.replace("\n", " ")
 
     time_str = strftime("%Y-%m-%d %H:%M:%S", localtime())
@@ -14,5 +15,6 @@ def log(message, restrict=True):
     print(log_message)
     with open(log_file, "a+") as f:
         f.write(log_message + "\n")
+
 
 log_file = Path("~/.autotweetcart/log.txt").expanduser()
