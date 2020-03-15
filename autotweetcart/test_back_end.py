@@ -6,10 +6,11 @@ from hypothesis.strategies import text
 # Local imports
 import back_end
 
+
 @given(s=text())
 def test_grab_title(s):
     if not ("--" in s or "//" in s):
-        new_s = back_end.grab_title(s) 
+        new_s = back_end.grab_title(s)
         assert new_s == s or new_s is None
 
 
