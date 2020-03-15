@@ -15,7 +15,8 @@ def has_bad_words(text, profanity_file_path) -> bool:
     with open(profanity_file_path, "r") as f:
         curses = base64.b64decode(f.read()).decode("utf-8")
         for curse in curses.split("\n"):
-            if curse in text.lower():
+            if curse in text.lower() and not (curse.isspace() or curse == ""):
+                log(f'Curse: "{curse}"')
                 return True
     return False
 
