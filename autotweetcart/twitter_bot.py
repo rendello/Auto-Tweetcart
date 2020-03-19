@@ -120,6 +120,8 @@ if __name__ == "__main__":
     except KeyboardInterrupt as e:
         log("Keyboard interrupt. Closing.")
         sys.exit(0)
+    except ProtocolError as e:
+        log(f"PROTOCOL ERROR:\n{e}", restrict=False)
     except Exception as e:
         log(f"ERROR:\n{e}", restrict=False)
         sys.exit(0)
