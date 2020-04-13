@@ -112,16 +112,20 @@ if __name__ == "__main__":
     api = tweepy.API(auth)
     bot_username = f"@{api.me().screen_name}"
 
-    stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
+    # The "Incomplete Read" ProtocolError is unfortuantely very prevalent and
+    # occurs randomly (usually during and idle period). Stream has to be restarted
+    # if it's encountered.
+    while True:
+        stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
 
-    try:
-        log("===== Starting =====")
-        stream.filter(track=[bot_username])
-    except KeyboardInterrupt as e:
-        log("Keyboard interrupt. Closing.")
-        sys.exit(0)
-    except ProtocolError as e:
-        log(f"PROTOCOL ERROR:\n{e}", restrict=False)
-    except Exception as e:
-        log(f"ERROR:\n{e}", restrict=False)
-        sys.exit(0)
+        try:
+            log("===== Starting =====")
+            stream.filter(track=[bot_username])
+        except ProtocolError as e:
+            log(f"PROTOCOL ERROR:\n{e}", restrict=False)
+        except KeyboardInterrupt as e:
+            log("Keyboard interrupt. Closing.")
+            sys.exit(0)
+        except Exception as e:
+            log(f"ERROR:\n{e}", restrict=False)
+            sys.exit(0)
