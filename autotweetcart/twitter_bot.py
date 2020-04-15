@@ -112,12 +112,12 @@ if __name__ == "__main__":
     api = tweepy.API(auth)
     bot_username = f"@{api.me().screen_name}"
 
-    # The "Incomplete Read" ProtocolError is unfortuantely very prevalent and
-    # occurs randomly (usually during and idle period). Stream has to be restarted
-    # if it's encountered.
-    while True:
-        stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
+    # Random ProtocolErrors are unfortunately very prevalent, usually during
+    # an idle period. Stream filtering has to be restarted if they're
+    # encountered.
+    stream = tweepy.Stream(auth=api.auth, listener=CartStreamListener())
 
+    while not stream.running:
         try:
             log("===== Starting =====")
             stream.filter(track=[bot_username])
