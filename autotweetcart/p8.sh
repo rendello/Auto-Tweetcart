@@ -8,7 +8,7 @@ rm ~/atc/GIF/*
 
 # -- Start PICO-8 (and wait for intro)
 DISPLAY=:10 ~/pico8 -desktop ~/atc/GIF -gif_scale 4 -gif_len 120 &
-sleep 6
+sleep 5
 
 # -- Get PICO-8 window ID
 window="$(DISPLAY=:10 xwininfo -root -tree | grep PICO-8 | cut -d' ' -f6)"
@@ -18,7 +18,9 @@ cat ~/atc/code | xclip -selection clipboard -d :10 -i
 
 # -- Paste, run, and start recording in PICO-8
 DISPLAY=:10 xdotool key --window $window Escape
+sleep .1
 DISPLAY=:10 xdotool key --window $window ctrl+v
+sleep .1
 DISPLAY=:10 xdotool key --window $window ctrl+r
 DISPLAY=:10 xdotool key --window $window F8
 
