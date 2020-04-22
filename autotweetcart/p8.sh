@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # -- Important if PICO8 wasn't closed correctly
 killall --quiet pico8
 
@@ -8,7 +9,7 @@ rm ~/atc/GIF/*
 
 # -- Start PICO-8 (and wait for intro)
 DISPLAY=:10 ~/pico8 -desktop ~/atc/GIF -gif_scale 4 -gif_len 120 &
-sleep 5
+sleep 3
 
 # -- Get PICO-8 window ID
 window="$(DISPLAY=:10 xwininfo -root -tree | grep PICO-8 | cut -d' ' -f6)"
