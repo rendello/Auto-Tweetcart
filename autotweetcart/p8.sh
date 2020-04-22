@@ -20,7 +20,6 @@ cat ~/atc/code | xclip -selection clipboard -d :10 -i
 DISPLAY=:10 xdotool key --window $window Escape
 sleep .1
 DISPLAY=:10 xdotool key --window $window ctrl+v
-sleep .1
 DISPLAY=:10 xdotool key --window $window ctrl+r
 DISPLAY=:10 xdotool key --window $window F8
 

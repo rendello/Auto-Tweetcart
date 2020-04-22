@@ -21,7 +21,7 @@ def authenticate(keys):
 def remove_bot_call(text, bot_username):
     new_text = ""
     for line in text.split("\n"):
-        if bot_username not in line:
+        if bot_username.lower() not in line.lower():
             new_text += f"{line}\n"
     return new_text
 
